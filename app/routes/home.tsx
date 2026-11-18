@@ -69,6 +69,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     countryTierInfo,
     countries,
   } = loaderData;
+  const signedIn = currentUser !== null;
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -109,7 +110,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 <Moon className="size-4" />
               )}
             </button>
-            {currentUser ? (
+            {signedIn ? (
               <Button asChild size="sm">
                 <Link to="/dashboard">Dashboard</Link>
               </Button>
@@ -131,14 +132,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </header>
 
       <main>
-        <Hero stats={stats} topics={topics} signedIn={currentUser !== null} />
+        <Hero stats={stats} topics={topics} signedIn={signedIn} />
         <HowItWorks />
         {featuredCourses.length > 0 && (
           <FeaturedCourses courses={featuredCourses} />
         )}
       </main>
 
-      <Footer signedIn={currentUser !== null} />
+      <Footer signedIn={signedIn} />
 
       <DevUI
         users={users}
