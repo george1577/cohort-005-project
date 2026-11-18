@@ -12,7 +12,7 @@ import {
 
 export type Db = BetterSQLite3Database<typeof schema>;
 
-export const FEATURED_COURSE_COUNT = 3;
+const FEATURED_COURSE_COUNT = 3;
 
 export type FeaturedCourse = {
   id: number;
@@ -76,7 +76,7 @@ function getLessonCounts(db: Db, courseIds: number[]) {
   return new Map(rows.map((row) => [row.courseId, row.count]));
 }
 
-export const TOPIC_COUNT = 6;
+const TOPIC_COUNT = 6;
 
 function getTopics(db: Db): Topic[] {
   const courseCount = sql<number>`count(${courses.id})`;
