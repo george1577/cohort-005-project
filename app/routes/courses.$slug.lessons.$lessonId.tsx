@@ -74,6 +74,15 @@ const saveNoteSchema = z.object({
     ),
 });
 
+const submitQuizSchema = z.object({
+  quizId: z.coerce.number().int().positive(),
+});
+
+const quizAnswerSchema = z.object({
+  questionId: z.coerce.number().int().positive(),
+  optionId: z.coerce.number().int().positive(),
+});
+
 const deleteCommentSchema = z.object({
   intent: z.literal("delete-comment"),
   commentId: z.coerce.number().int(),
@@ -422,10 +431,13 @@ export async function action({ params, request }: Route.ActionArgs) {
   }
 
   if (intent === "submit-quiz") {
-    const quizId = Number(formData.get("quizId"));
-    if (isNaN(quizId)) {
+    const parsedQuiz = submitQuizSchema.safeParse({
+      quizId: formData.get("quizId"),
+    });
+    if (!parsedQuiz.success) {
       throw data("Invalid quiz ID", { status: 400 });
     }
+    const { quizId } = parsedQuiz.data;
     // Scope the quiz to this lesson so a quiz elsewhere can't be reached by
     // posting its id to this route.
     const quiz = getQuizById(quizId);
@@ -437,10 +449,12 @@ export async function action({ params, request }: Route.ActionArgs) {
     const selectedAnswers: Record<number, number> = {};
     for (const [key, value] of formData.entries()) {
       if (key.startsWith("question-")) {
-        const questionId = Number(key.replace("question-", ""));
-        const optionId = Number(value);
-        if (!isNaN(questionId) && !isNaN(optionId)) {
-          selectedAnswers[questionId] = optionId;
+        const answer = quizAnswerSchema.safeParse({
+          questionId: key.slice("question-".length),
+          optionId: value,
+        });
+        if (answer.success) {
+          selectedAnswers[answer.data.questionId] = answer.data.optionId;
         }
       }
     }
