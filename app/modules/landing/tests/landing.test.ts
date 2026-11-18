@@ -140,7 +140,7 @@ describe("featured courses", () => {
     expect(get()).toEqual({
       featuredCourses: [],
       topics: [],
-      stats: { courses: 0, lessons: 0, instructors: 0, categories: 0 },
+      stats: { courses: 0, lessons: 0, instructors: 0 },
     });
   });
 });
@@ -197,7 +197,6 @@ describe("catalogue stats", () => {
       courses: 2,
       lessons: 6,
       instructors: 2,
-      categories: 2,
     });
   });
 
@@ -210,6 +209,5 @@ describe("catalogue stats", () => {
     expect(page.featuredCourses).toHaveLength(3);
     expect(page.stats.courses).toBe(5);
     expect(page.stats.instructors).toBe(1);
-    expect(page.stats.categories).toBe(1);
   });
 });

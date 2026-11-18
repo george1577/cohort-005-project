@@ -29,7 +29,6 @@ export type CatalogueStats = {
   courses: number;
   lessons: number;
   instructors: number;
-  categories: number;
 };
 
 export type Topic = {
@@ -96,7 +95,6 @@ function getCatalogueStats(db: Db): CatalogueStats {
     .select({
       courses: countDistinct(courses.id),
       instructors: countDistinct(courses.instructorId),
-      categories: countDistinct(courses.categoryId),
     })
     .from(courses)
     .where(isPublished)
